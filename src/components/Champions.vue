@@ -12,9 +12,6 @@
 <script>
 export default {
   name: 'Champions',
-  mounted() {
-    console.log(this.$store)
-  },
   computed: {
     champions() {
       return this.$store.state.champions

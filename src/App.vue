@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <Home />
-    <Champions />
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,36 +8,78 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+
 import axios from 'axios'
+
 import Home from './components/Home.vue'
-import Champions from './components/Champions.vue'
+import Game from './components/Game.vue'
+import Results from './components/Results.vue'
+import Rules from './components/Rules.vue'
 
 Vue.use(Vuex)
+Vue.use(VueRouter)
 
 const store = new Vuex.Store({
   state: {
+    champsCount: 0,
     champions: [],
+    gameStarted: false,
+    timer: 900
   },
   mutations: {
     storeChamps(state, champions) {
       state.champions = champions
     },
+    storeChampsCount(state, count) {
+      state.champsCount = count
+    },
+    decrementTimer(state) {
+      state.timer--
+    },
+    resetTimer(state) {
+      state.timer = 900
+    },
   },
   actions: {
-    toggleChamp(state, champions, championIndex) {
-      state.champions[championIndex].isRevealed = !state.champions[championIndex].isRevealed
+    decrementTimer() {
+      store.commit('decrementTimer');
+    },
+    resetTimer() {
+      store.commit('resetTimer');
+    }
+  },
+  getters: {
+    currentTime: state => {
+      let minutes = Math.floor(state.timer/60)
+      let seconds = Math.floor(state.timer - minutes*60)
+
+      if(minutes < 10) {
+        minutes = '0'+minutes
+      }
+      if(seconds < 10) {
+        seconds = '0'+seconds
+      }
+      return `${minutes}:${seconds}`
     }
   }
+})
+
+const routes = [
+  { path: '/', component: Home},
+  { path: '/rules', component: Rules},
+  { path: '/game', component: Game},
+  { path: '/results', component: Results}
+]
+
+const router = new VueRouter({
+  routes
 })
 
 export default {
   name: 'App',
   store,
-  components: {
-    Home,
-    Champions,
-  },
-
+  router,
   mounted() {
     this.buildChamps()
   },
@@ -48,6 +89,8 @@ export default {
 
       let champsFinal = []
       const allChamps = await axios.get('http://ddragon.leagueoflegends.com/cdn/10.7.1/data/en_US/champion.json')
+
+      this.$store.commit('storeChampsCount', Object.keys(allChamps.data.data).length)
     
       for await (const champName of Object.keys(allChamps.data.data)) {
         let champObj = await this.getSingleChamp(champName)
@@ -102,6 +145,15 @@ body {
   width: 100vw;
 }
 
+h1 {
+  margin: 0;
+  font-family: 'Optimus Princeps';
+  font-size: 48px;
+  line-height: 62px;
+  color: #F4DE93;
+  color: radial-gradient(33.21% 48.02% at 49.87% 54.67%, #F4DE93 0%, #AE914B 100%);
+}
+
 h2 {
   font-family: 'Proxima Nova';
   font-style: normal;
@@ -111,7 +163,34 @@ h2 {
   color: #BDBDBD;
 }
 
-button {
+p, li {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #BDBDBD;
+}
+
+input {
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  /* Grey Content */
+  border: 2px solid #BDBDBD;
+  box-sizing: border-box;
+  border-radius: 8px;
+  outline: 0;
+  color: #F4DE93;
+  font-family: Proxima Nova;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  text-align:center;
+}
+
+.button {
   display: flex;
   flex-direction: row;
   padding: 16px 24px;
@@ -119,6 +198,7 @@ button {
   border: none;
   border-radius: 8px;
   color: #11101E;
+  text-decoration: none;
 
   font-family: 'Proxima Nova';
   font-style: normal;

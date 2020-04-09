@@ -2,8 +2,8 @@
   <div id="home">
     <div class="home__content">
       <img src="../assets/images/logo.png" />
-      <h2>Can you guess all X champions in League of legends in less than 15 minutes ?</h2>
-      <button>Play now</button>
+      <h2>Can you guess all {{champsCount}} champions in League of legends in less than 15 minutes ?</h2>
+      <router-link class="button" to="/rules">Play now</router-link>
     </div>
   </div>
 </template>
@@ -12,8 +12,11 @@
 
 export default {
   name: 'Home',
-  // props: {
-  // }
+  computed: {
+    champsCount() {
+      return this.$store.state.champsCount
+    }
+  }
 }
 
 </script>

@@ -105,14 +105,14 @@ export default {
       let champion = await axios.get(`http://ddragon.leagueoflegends.com/cdn/10.7.1/data/en_US/champion/${champName}.json`)
       champion = Object.entries(champion.data.data)[0][1];
 
-      const randNumber = Math.floor(Math.random() * champion.skins.length) + 1
+      const randNumber = Math.floor(Math.random() * champion.skins.length-1) + 1
       
       let champObj = {
         name: champion.name,
         title: champion.title,
-        isRevealed: false,
-        loadingUrl: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.name}_${randNumber}.jpg`,
-        splashUrl: `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.name}_${randNumber}.jpg`,
+        isRevealed: true,
+        loadingUrl: `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_${randNumber}.jpg`,
+        squareUrl: `http://ddragon.leagueoflegends.com/cdn/img/champion/${champion.id}.jpg`,
       }
 
       return champObj
@@ -137,12 +137,17 @@ export default {
 
 body {
   margin: 0;
+  background: #11101E;
 }
 
 #app {
   background: #11101E;
   height: 100vh;
   width: 100vw;
+}
+
+div {
+  box-sizing: border-box;
 }
 
 h1 {
@@ -183,8 +188,9 @@ input {
   outline: 0;
   color: #F4DE93;
   font-family: Proxima Nova;
+  text-transform: uppercase;
   font-style: normal;
-  font-weight: 600;
+  font-weight:300;
   font-size: 20px;
   line-height: 24px;
   text-align:center;

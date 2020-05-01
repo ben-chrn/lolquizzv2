@@ -1,22 +1,7 @@
 <template>
   <div id="game">
-    <div class="game__content">
-      <button 
-        class="button"
-        v-on:click="startGame"
-      >Start</button>
-      <button 
-        class="button"
-        v-on:click="resetTimer"
-      >Reset</button>
-      <button 
-        class="button"
-        v-on:click="pauseTimer"
-      >Pause</button>
-      <p>{{ currentTime }}</p>
-      <Champions />
-      <Sidebar />
-    </div>
+    <Champions />
+    <Sidebar />
   </div>
 </template>
 
@@ -52,5 +37,18 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+  div#game {
+    display:flex;
+    flex-direction: row;
+
+    div#champions {
+      width: 75%;
+    }
+
+    div#sidebar { 
+      width: 25%;
+    }
+  }
 </style>
